@@ -44,6 +44,7 @@ I don't want this thing to die. And I would like to learn cool stuff! :-)
 * **Add block types**
   Currently time budgets can be per `'workweek` and `'week`, maybe
   something else is cool too.
+* **Fix font-locking in agenda**
 
 ## License
 
