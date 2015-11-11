@@ -126,5 +126,6 @@ See this example:
   (let ((inhibit-read-only t))
     (insert (org-time-budgets-table) "\n\n")))
 
+(provide 'org-time-budgets)
 
 ;;; org-time-budgets.el ends here
