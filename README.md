@@ -7,14 +7,14 @@ display clocked time in a fancy table.
 (setq org-time-budgets '((:title "Business" :tags "+business" :budget "30:00" :block 'workweek)
                          (:title "Sideprojects" :tags "+personal+project" :budget "14:00" :block 'week)
                          (:title "Practice Music" :tags "+music+practice" :budget "2:55" :block 'week)
-                         (:title "Exercise" :tags "+exercise" :budget "6:00" :block 'week)
+                         (:title "Exercise" :tags "+exercise" :budget "5:15" :block 'week)
                          (:title "Language" :tags "+lang" :budget "5:15" :block 'week)))
 ```
 
 Running the function `org-time-budgets-table` will return something like:
 
 ```
-Business        [|||||.........] 01:37 / 04:17  [||............] 05:46 / 30:00
+Business        [|||||.........] 02:47 / 06:00  [||............] 05:46 / 30:00
 Sideprojects    [||||..........] 00:36 / 02:00  [|.............] 01:10 / 14:00
 Practice Music  [||||||||||||||] 01:04 / 00:25  [|||||.........] 01:04 / 02:55
 Exercise        [..............] 00:00 / 00:45  [..............] 00:00 / 05:15
@@ -44,6 +44,7 @@ I don't want this thing to die. And I would like to learn cool stuff! :-)
 * **Add block types**
   Currently time budgets can be per `'workweek` and `'week`, maybe
   something else is cool too.
+* **Fix font-locking in agenda**
 
 ## License
 

@@ -1,8 +1,8 @@
-;;; org-time-budgets --- Define time budgets and display clocked time.
+;;; org-time-budgets.el --- Define time budgets and display clocked time.
 
 ;; Author: Arthur Leonard Andersen <leoc.git@gmail.com>
 ;; Created: November 08, 2015
-;; Version: 1.0.0
+;; Version: 1.0.1
 ;; Package-Requires: ((alert "0.5.10") (cl-lib "0.5"))
 
 ;; This file is free software; you can redistribute it and/or modify
@@ -126,5 +126,6 @@ See this example:
   (let ((inhibit-read-only t))
     (insert (org-time-budgets-table) "\n\n")))
 
+(provide 'org-time-budgets)
 
 ;;; org-time-budgets.el ends here
