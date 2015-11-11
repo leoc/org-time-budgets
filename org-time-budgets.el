@@ -1,4 +1,4 @@
-;;; org-time-budgets --- Define time budgets and display clocked time.
+;;; org-time-budgets.el --- Define time budgets and display clocked time.
 
 ;; Author: Arthur Leonard Andersen <leoc.git@gmail.com>
 ;; Created: November 08, 2015
