@@ -48,4 +48,4 @@ I don't want this thing to die. And I would like to learn cool stuff! :-)
 
 ## License
 
-GNUv3 guys!
+GNUv3!
