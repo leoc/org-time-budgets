@@ -77,7 +77,7 @@ See this example:
                    (nth 1 (save-window-excursion
                             (find-file file)
                             (org-clock-get-table-data file filters))))
-                 org-agenda-files)))
+                 (org-agenda-files))))
 
 (defun org-time-budgets-table ()
   "List the time budgets in a table."
