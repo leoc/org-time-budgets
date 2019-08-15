@@ -50,6 +50,27 @@ See this example:
   :group 'org-pomodoro
   :type 'list)
 
+(defface org-time-budgets-done-face
+  '((((background light)) (:foreground "#4df946"))
+    (((background dark)) (:foreground "#228b22")))
+  "Face for days on which a task should start to be done."
+  :group 'org-time-budgets
+  :group 'org-faces)
+
+(defface org-time-budgets-close-face
+  '((((background light)) (:foreground "#ffc500"))
+    (((background dark)) (:foreground "#b8860b")))
+  "Face for days on which a task is due."
+  :group 'org-time-budgets
+  :group 'org-faces)
+
+(defface org-time-budgets-todo-face
+  '((((background light)) (:foreground "#fc7560"))
+    (((background dark)) (:foreground "#8b0000")))
+  "Face for days on which a task is overdue."
+  :group 'org-time-budgets
+  :group 'org-faces)
+
 (defun org-time-budgets-minutes-to-string (minutes)
   "Return the given MINUTES as string HH:MM."
   (let ((secs0 (abs (* minutes 60))))
@@ -63,11 +84,16 @@ See this example:
 
 (defun org-time-budgets-bar (width progress goal)
   "Create a simple progress bar with WIDTH, displaying the PROGRESS relative to the set GOAL."
-  (let* ((progress-width (floor (* (/ (float progress) (float goal)) width)))
+  (let* ((progress-percent (/ (float progress) (float goal)))
+         (progress-width (floor (* progress-percent width)))
          (progress (make-string (min (max 0 progress-width) width) ?|))
-         (spacer (make-string (max 0 (- width progress-width)) ?.)))
+         (spacer (make-string (max 0 (- width progress-width)) ?.))
+         (face (cond
+                ((>= progress-percent 1.0) 'org-time-budgets-done-face)
+                ((> progress-percent 0.7) 'org-time-budgets-close-face)
+                (t 'org-time-budgets-todo-face))))
     (concat
-     (propertize progress 'font-lock-face '(:foreground "red"))
+     (propertize progress 'face face)
      spacer)))
 
 (defun org-time-budgets-time (filters)
