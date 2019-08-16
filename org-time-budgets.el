@@ -50,6 +50,9 @@ See this example:
   :group 'org-pomodoro
   :type 'list)
 
+(defvar org-time-budgets-show-budgets t
+  "If non-nil, show time-budgets in agenda buffers.")
+
 (defface org-time-budgets-done-face
   '((((background light)) (:foreground "#4df946"))
     (((background dark)) (:foreground "#228b22")))
@@ -151,6 +154,24 @@ See this example:
   "Inhibit read-only and return the `org-time-budget-table'."
   (let ((inhibit-read-only t))
     (insert (org-time-budgets-table) "\n\n")))
+
+(defun org-time-budgets-in-agenda-maybe (arg)
+  "Return budgets table if org-time-budgets-show-budgets is set."
+  (when org-time-budgets-show-budgets
+    (org-time-budgets-in-agenda arg)))
+
+(defun org-time-budgets-toggle-time-budgets ()
+  "Toggle display of time-budgets in an agenda buffer."
+  (interactive)
+  (org-agenda-check-type t 'agenda)
+  (setq org-time-budgets-show-budgets (not org-time-budgets-show-budgets))
+  (org-agenda-redo)
+  (org-agenda-set-mode-name)
+  (message "Time-Budgets turned %s"
+           (if org-time-budgets-show-budgets "on" "off")))
+
+;; free agenda-mode-map keys are rare
+(org-defkey org-agenda-mode-map "V" 'org-time-budgets-toggle-time-budgets)
 
 (provide 'org-time-budgets)
 

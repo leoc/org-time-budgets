@@ -30,8 +30,10 @@ doing something like:
 (setq org-agenda-custom-commands
       '(("a" "Agenda"
          ((agenda "" ((org-agenda-sorting-strategy '(habit-down time-up priority-down category-keep user-defined-up))))
-          (org-time-budgets-in-agenda)))))
+          (org-time-budgets-in-agenda-maybe)))))
 ```
+
+The budgets table can be toggled using <kbd>V</kbd> in the agenda.
 
 ## Contribute
 
