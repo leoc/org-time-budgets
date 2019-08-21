@@ -151,9 +151,16 @@ See this example:
                "\n")))
 
 (defun org-time-budgets-in-agenda (arg)
-  "Inhibit read-only and return the `org-time-budget-table'."
-  (let ((inhibit-read-only t))
-    (insert (org-time-budgets-table) "\n\n")))
+  "Insert the `org-time-budget-table' at the top of the current
+agenda."
+  (save-excursion
+    (let ((agenda-start-day (nth 1 (get-text-property (point) 'org-last-args)))
+          (inhibit-read-only t))
+      ;; find top of agenda
+      (while (not (and (get-text-property (point) 'org-date-line)
+                       (equal (get-text-property (point) 'day) agenda-start-day)))
+        (forward-line -1))
+      (insert (org-time-budgets-table) "\n\n"))))
 
 (defun org-time-budgets-in-agenda-maybe (arg)
   "Return budgets table if org-time-budgets-show-budgets is set."
