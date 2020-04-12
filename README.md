@@ -30,7 +30,7 @@ doing something like:
 (setq org-agenda-custom-commands
       '(("a" "Agenda"
          ((agenda "" ((org-agenda-sorting-strategy '(habit-down time-up priority-down category-keep user-defined-up))))
-          (org-time-budgets-for-agenda)))))
+          (org-time-budgets-in-agenda)))))
 ```
 
 ## Contribute
