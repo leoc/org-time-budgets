@@ -30,8 +30,10 @@ doing something like:
 (setq org-agenda-custom-commands
       '(("a" "Agenda"
          ((agenda "" ((org-agenda-sorting-strategy '(habit-down time-up priority-down category-keep user-defined-up))))
-          (org-time-budgets-in-agenda)))))
+          (org-time-budgets-in-agenda-maybe)))))
 ```
+
+The budgets table can be toggled using <kbd>V</kbd> in the agenda.
 
 ## Contribute
 
@@ -44,7 +46,6 @@ I don't want this thing to die. And I would like to learn cool stuff! :-)
 * **Add block types**
   Currently time budgets can be per `'workweek` and `'week`, maybe
   something else is cool too.
-* **Fix font-locking in agenda**
 
 ## License
 

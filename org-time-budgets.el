@@ -50,6 +50,30 @@ See this example:
   :group 'org-pomodoro
   :type 'list)
 
+(defvar org-time-budgets-show-budgets t
+  "If non-nil, show time-budgets in agenda buffers.")
+
+(defface org-time-budgets-done-face
+  '((((background light)) (:foreground "#4df946"))
+    (((background dark)) (:foreground "#228b22")))
+  "Face for days on which a task should start to be done."
+  :group 'org-time-budgets
+  :group 'org-faces)
+
+(defface org-time-budgets-close-face
+  '((((background light)) (:foreground "#ffc500"))
+    (((background dark)) (:foreground "#b8860b")))
+  "Face for days on which a task is due."
+  :group 'org-time-budgets
+  :group 'org-faces)
+
+(defface org-time-budgets-todo-face
+  '((((background light)) (:foreground "#fc7560"))
+    (((background dark)) (:foreground "#8b0000")))
+  "Face for days on which a task is overdue."
+  :group 'org-time-budgets
+  :group 'org-faces)
+
 (defun org-time-budgets-minutes-to-string (minutes)
   "Return the given MINUTES as string HH:MM."
   (let ((secs0 (abs (* minutes 60))))
@@ -63,11 +87,16 @@ See this example:
 
 (defun org-time-budgets-bar (width progress goal)
   "Create a simple progress bar with WIDTH, displaying the PROGRESS relative to the set GOAL."
-  (let* ((progress-width (floor (* (/ (float progress) (float goal)) width)))
+  (let* ((progress-percent (/ (float progress) (float goal)))
+         (progress-width (floor (* progress-percent width)))
          (progress (make-string (min (max 0 progress-width) width) ?|))
-         (spacer (make-string (max 0 (- width progress-width)) ?.)))
+         (spacer (make-string (max 0 (- width progress-width)) ?.))
+         (face (cond
+                ((>= progress-percent 1.0) 'org-time-budgets-done-face)
+                ((> progress-percent 0.7) 'org-time-budgets-close-face)
+                (t 'org-time-budgets-todo-face))))
     (concat
-     (propertize progress 'font-lock-face '(:foreground "red"))
+     (propertize progress 'face face)
      spacer)))
 
 (defun org-time-budgets-time (filters)
@@ -77,7 +106,7 @@ See this example:
                    (nth 1 (save-window-excursion
                             (find-file file)
                             (org-clock-get-table-data file filters))))
-                 org-agenda-files)))
+                 (org-agenda-files))))
 
 (defun org-time-budgets-table ()
   "List the time budgets in a table."
@@ -122,9 +151,34 @@ See this example:
                "\n")))
 
 (defun org-time-budgets-in-agenda (arg)
-  "Inhibit read-only and return the `org-time-budget-table'."
-  (let ((inhibit-read-only t))
-    (insert (org-time-budgets-table) "\n\n")))
+  "Insert the `org-time-budget-table' at the top of the current
+agenda."
+  (save-excursion
+    (let ((agenda-start-day (nth 1 (get-text-property (point) 'org-last-args)))
+          (inhibit-read-only t))
+      ;; find top of agenda
+      (while (not (and (get-text-property (point) 'org-date-line)
+                       (equal (get-text-property (point) 'day) agenda-start-day)))
+        (forward-line -1))
+      (insert (org-time-budgets-table) "\n\n"))))
+
+(defun org-time-budgets-in-agenda-maybe (arg)
+  "Return budgets table if org-time-budgets-show-budgets is set."
+  (when org-time-budgets-show-budgets
+    (org-time-budgets-in-agenda arg)))
+
+(defun org-time-budgets-toggle-time-budgets ()
+  "Toggle display of time-budgets in an agenda buffer."
+  (interactive)
+  (org-agenda-check-type t 'agenda)
+  (setq org-time-budgets-show-budgets (not org-time-budgets-show-budgets))
+  (org-agenda-redo)
+  (org-agenda-set-mode-name)
+  (message "Time-Budgets turned %s"
+           (if org-time-budgets-show-budgets "on" "off")))
+
+;; free agenda-mode-map keys are rare
+(org-defkey org-agenda-mode-map "V" 'org-time-budgets-toggle-time-budgets)
 
 (provide 'org-time-budgets)
 
