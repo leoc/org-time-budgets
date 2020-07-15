@@ -4,11 +4,11 @@ This package provides functions to define time budgets per week and
 display clocked time in a fancy table.
 
 ```elisp
-(setq org-time-budgets '((:title "Business" :tags "+business" :budget "30:00" :block workweek)
-                         (:title "Sideprojects" :tags "+personal+project" :budget "14:00" :block week)
-                         (:title "Practice Music" :tags "+music+practice" :budget "2:55" :block week)
-                         (:title "Exercise" :tags "+exercise" :budget "5:15" :block week)
-                         (:title "Language" :tags "+lang" :budget "5:15" :block week)))
+(setq org-time-budgets '((:title "Business" :match "+business" :budget "30:00" :block workweek)
+                         (:title "Sideprojects" :match "+personal+project" :budget "14:00" :block week)
+                         (:title "Practice Music" :match "+music+practice" :budget "2:55" :block week)
+                         (:title "Exercise" :match "+exercise" :budget "5:15" :block week)
+                         (:title "Language" :match "+lang" :budget "5:15" :block week)))
 ```
 
 Running the function `org-time-budgets-table` will return something like:

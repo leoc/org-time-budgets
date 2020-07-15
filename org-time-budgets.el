@@ -44,10 +44,10 @@
 
 See this example:
 
-'((:title \"Business\" :tags \"+business\" :budget \"30:00\")
-  (:title \"Practice Music\" :tags \"+practice+music\" :budget \"4:00\")
-  (:title \"Exercise\" :tags \"+exercise\" :budget \"5:00\"))"
-  :group 'org-pomodoro
+'((:title \"Business\" :match \"+business\" :budget \"30:00\")
+  (:title \"Practice Music\" :match \"+practice+music\" :budget \"4:00\")
+  (:title \"Exercise\" :match \"+exercise\" :budget \"5:00\"))"
+  :group 'org-time-budgets
   :type 'list)
 
 (defvar org-time-budgets-show-budgets t
@@ -115,7 +115,8 @@ See this example:
                                            org-time-budgets))))
     (mapconcat #'(lambda (budget)
                   (let* ((title (plist-get budget :title))
-                         (tags (plist-get budget :tags))
+                         (match (or (plist-get budget :match)
+                                    (plist-get budget :tags))) ;; support for old :tags syntax
                          (block (or (plist-get budget :block) 'week))
 
                          (trange (org-clock-special-range 'thisweek))
@@ -130,13 +131,13 @@ See this example:
                                                (time-subtract tend (current-time)))))
 
                          (range-budget (org-time-budgets-string-to-minutes (plist-get budget :budget)))
-                         (range-clocked (org-time-budgets-time `(:tags ,tags :tstart ,tstart-s :tend ,tend-s)))
+                         (range-clocked (org-time-budgets-time `(:match ,match :tstart ,tstart-s :tend ,tend-s)))
                          (range-bar-length (floor (* (/ (float range-clocked) (float range-budget)) 14)))
 
                          (today-budget (if (eq block 'workweek)
                                            (/ range-budget 5)
                                          (/ range-budget 7)))
-                         (today-clocked (org-time-budgets-time `(:tags ,tags :block today))))
+                         (today-clocked (org-time-budgets-time `(:match ,match :block today))))
                     (format "%s  [%s] %s / %s  [%s] %s / %s"
                              (concat
                               title
