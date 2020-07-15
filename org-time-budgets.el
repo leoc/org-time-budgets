@@ -44,9 +44,9 @@
 
 See this example:
 
-'((:title \"Business\" :match \"+business\" :budget \"30:00\")
-  (:title \"Practice Music\" :match \"+practice+music\" :budget \"4:00\")
-  (:title \"Exercise\" :match \"+exercise\" :budget \"5:00\"))"
+'((:title \"Business\" :match \"+business\" :budget \"30:00\" :blocks (workday week))
+  (:title \"Practice Music\" :match \"+practice+music\" :budget \"4:00\" :blocks (nil week))
+  (:title \"Exercise\" :match \"+exercise\" :budget \"5:00\" :blocks (day)))"
   :group 'org-time-budgets
   :type 'list)
 
@@ -108,6 +108,22 @@ See this example:
                             (org-clock-get-table-data file filters))))
                  (org-agenda-files))))
 
+(defun org-time-budgets-format-block (block)
+  (let ((current (case block
+                   (day     (org-time-budgets-time `(:match ,match :block today)))
+                   (workday (org-time-budgets-time `(:match ,match :block today)))
+                   (week    (org-time-budgets-time `(:match ,match :tstart ,tstart-s :tend ,tend-s)))))
+        (budget (case block
+                  (day     (/ range-budget 7))
+                  (workday (/ range-budget 5))
+                  (week    range-budget))))
+    (if (and current budget)
+        (format "[%s] %s / %s"
+                (org-time-budgets-bar 14 current budget)
+                (org-time-budgets-minutes-to-string current)
+                (org-time-budgets-minutes-to-string budget))
+      "                              ")))
+
 (defun org-time-budgets-table ()
   "List the time budgets in a table."
   (let ((title-column-width (apply #'max
@@ -117,37 +133,28 @@ See this example:
                   (let* ((title (plist-get budget :title))
                          (match (or (plist-get budget :match)
                                     (plist-get budget :tags))) ;; support for old :tags syntax
-                         (block (or (plist-get budget :block) 'week))
-
+                         (blocks (or (plist-get budget :blocks)
+                                     (case (plist-get budget :block) ;; support for old :block syntax
+                                       (week '(day week))
+                                       (workweek '(workday week)))
+                                     '(day week)))
                          (trange (org-clock-special-range 'thisweek))
                          (tstart (nth 0 trange))
                          (tstart-s (format-time-string "[%Y-%m-%d]" tstart))
                          (tend (nth 1 trange))
-                         (tworkweekend (time-add tstart (seconds-to-time
-                                                         (* 5 24 60 60))))
                          (tend-s (format-time-string "[%Y-%m-%d]" tend))
                          (days-til-week-ends (ceiling
                                               (time-to-number-of-days
                                                (time-subtract tend (current-time)))))
-
-                         (range-budget (org-time-budgets-string-to-minutes (plist-get budget :budget)))
-                         (range-clocked (org-time-budgets-time `(:match ,match :tstart ,tstart-s :tend ,tend-s)))
-                         (range-bar-length (floor (* (/ (float range-clocked) (float range-budget)) 14)))
-
-                         (today-budget (if (eq block 'workweek)
-                                           (/ range-budget 5)
-                                         (/ range-budget 7)))
-                         (today-clocked (org-time-budgets-time `(:match ,match :block today))))
-                    (format "%s  [%s] %s / %s  [%s] %s / %s"
+                         (range-budget (org-time-budgets-string-to-minutes (plist-get budget :budget))))
+                    (format "%s  %s"
                              (concat
                               title
                               (make-string (max 0 (- title-column-width (string-width title))) ?\s))
-                             (org-time-budgets-bar 14 today-clocked today-budget)
-                             (org-time-budgets-minutes-to-string today-clocked)
-                             (org-time-budgets-minutes-to-string today-budget)
-                             (org-time-budgets-bar 14 range-clocked range-budget)
-                             (org-time-budgets-minutes-to-string range-clocked)
-                             (org-time-budgets-minutes-to-string range-budget))))
+                             (mapconcat
+                              #'org-time-budgets-format-block
+                              blocks
+                              "  "))))
                org-time-budgets
                "\n")))
 
