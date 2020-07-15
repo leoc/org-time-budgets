@@ -56,21 +56,21 @@ See this example:
 (defface org-time-budgets-done-face
   '((((background light)) (:foreground "#4df946"))
     (((background dark)) (:foreground "#228b22")))
-  "Face for days on which a task should start to be done."
+  "Face for budgets which are fulfilled."
   :group 'org-time-budgets
   :group 'org-faces)
 
 (defface org-time-budgets-close-face
   '((((background light)) (:foreground "#ffc500"))
     (((background dark)) (:foreground "#b8860b")))
-  "Face for days on which a task is due."
+  "Face for budgets which are close to being fulfilled."
   :group 'org-time-budgets
   :group 'org-faces)
 
 (defface org-time-budgets-todo-face
   '((((background light)) (:foreground "#fc7560"))
     (((background dark)) (:foreground "#8b0000")))
-  "Face for days on which a task is overdue."
+  "Face for budgets which are not yet fulfilled."
   :group 'org-time-budgets
   :group 'org-faces)
 
