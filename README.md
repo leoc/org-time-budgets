@@ -53,6 +53,10 @@ The budgets table can be toggled using <kbd>V</kbd> in the agenda.
 With the variable `org-time-budgets-hide-on-weekend` you can control
 whether or not `workday` blocks are also displayed on weekends.
 
+If you set the budget to zero only the clocked time is shown in the
+budgets table. You can use this as a simplified clock table. For
+example to track time spent on distractions.
+
 ## Contribute
 
 I don't want this thing to die. And I would like to learn cool stuff! :-)

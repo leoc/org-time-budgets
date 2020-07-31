@@ -137,10 +137,13 @@ is not provided `(current-time)' is used."
                                (/ range-budget 5)))
                   (week    range-budget))))
     (if (and current budget)
+        (if (eq budget 0)
+            (format "                 %s        "
+                    (org-time-budgets-minutes-to-string current))
         (format "[%s] %s / %s"
                 (org-time-budgets-bar 14 current budget)
                 (org-time-budgets-minutes-to-string current)
-                (org-time-budgets-minutes-to-string budget))
+                (org-time-budgets-minutes-to-string budget)))
       "                              ")))
 
 (defun org-time-budgets-table ()
