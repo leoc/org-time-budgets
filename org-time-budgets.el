@@ -50,6 +50,12 @@ See this example:
   :group 'org-time-budgets
   :type 'list)
 
+(defcustom org-time-budgets-hide-on-weekend t
+  "If t hide `workday' blocks on weekends as defined by
+`org-agenda-weekend-days'."
+  :group 'org-time-budgets
+  :type 'boolean)
+
 (defvar org-time-budgets-show-budgets t
   "If non-nil, show time-budgets in agenda buffers.")
 
@@ -108,6 +114,16 @@ See this example:
                             (org-clock-get-table-data file filters))))
                  (org-agenda-files))))
 
+(defun org-time-budgets-weekend-p (&optional time)
+  "Return t if TIME is on a weekend day.
+
+Weekends are defined as in `org-agenda-weekend-days'. When TIME
+is not provided `(current-time)' is used."
+  (let ((day (decoded-time-weekday
+              (decode-time
+               (or time (current-time))))))
+    (member day org-agenda-weekend-days)))
+
 (defun org-time-budgets-format-block (block)
   (let ((current (case block
                    (day     (org-time-budgets-time `(:match ,match :block today)))
@@ -115,7 +131,10 @@ See this example:
                    (week    (org-time-budgets-time `(:match ,match :tstart ,tstart-s :tend ,tend-s)))))
         (budget (case block
                   (day     (/ range-budget 7))
-                  (workday (/ range-budget 5))
+                  (workday (if (and org-time-budgets-hide-on-weekend
+                                    (org-time-budgets-weekend-p))
+                               nil
+                               (/ range-budget 5)))
                   (week    range-budget))))
     (if (and current budget)
         (format "[%s] %s / %s"

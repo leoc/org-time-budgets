@@ -48,6 +48,11 @@ doing something like:
 
 The budgets table can be toggled using <kbd>V</kbd> in the agenda.
 
+## Adjusting display of the budget table
+
+With the variable `org-time-budgets-hide-on-weekend` you can control
+whether or not `workday` blocks are also displayed on weekends.
+
 ## Contribute
 
 I don't want this thing to die. And I would like to learn cool stuff! :-)
