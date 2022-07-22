@@ -109,11 +109,11 @@ See this example:
                  (org-agenda-files))))
 
 (defun org-time-budgets-format-block (block)
-  (let ((current (case block
+  (let ((current (cl-case block
                    (day     (org-time-budgets-time `(:match ,match :block today)))
                    (workday (org-time-budgets-time `(:match ,match :block today)))
                    (week    (org-time-budgets-time `(:match ,match :tstart ,tstart-s :tend ,tend-s)))))
-        (budget (case block
+        (budget (cl-case block
                   (day     (/ range-budget 7))
                   (workday (/ range-budget 5))
                   (week    range-budget))))
@@ -134,7 +134,7 @@ See this example:
                          (match (or (plist-get budget :match)
                                     (plist-get budget :tags))) ;; support for old :tags syntax
                          (blocks (or (plist-get budget :blocks)
-                                     (case (plist-get budget :block) ;; support for old :block syntax
+                                     (cl-case (plist-get budget :block) ;; support for old :block syntax
                                        (week '(day week))
                                        (workweek '(workday week)))
                                      '(day week)))
